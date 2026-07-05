@@ -579,3 +579,21 @@ function escapeHtml(str){
 
 document.getElementById('searchBox').addEventListener('input', renderDashboard);
   document.getElementById('regionFilter').addEventListener('change', renderDashboard);
+  
+// ---- CSV export ----
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const list = loadVolunteers();
+  if(list.length === 0){ showToast('No data to export yet.'); return; }
+  const headers = ['Name','Phone','Email','Region','Skill','Availability','Registered On'];
+  const rows = list.map(v => [v.name, v.phone, v.email, v.region, v.skill, v.avail, new Date(v.date).toLocaleString()]);
+  let csv = headers.join(',') + '\n' + rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'naye_pankh_volunteers.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+renderDashboard();
