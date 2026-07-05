@@ -155,6 +155,13 @@
     content:''; position:absolute; left:0; top:10%; bottom:10%; width:4px;
     background: var(--coral); border-radius:4px;
   }
+  .del-btn{
+  position:absolute; top:10px; right:10px;
+  background:rgba(209,96,61,0.12); color:var(--coral);
+  border:none; width:24px; height:24px; border-radius:50%;
+  font-size:13px; font-weight:700; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  }
   .vcard .vname{ font-weight:700; font-size:15px; margin-bottom:2px; }
   .vcard .vmeta{ font-size:12.5px; color:#5b6b64; line-height:1.5; }
   .vcard .vskill{
@@ -378,6 +385,12 @@ function flyFeather(){
   });
   setTimeout(()=> f.remove(), 1050);
 }
+    function deleteVolunteer(id){
+  if(!confirm('Remove this volunteer record?')) return;
+  const list = loadVolunteers().filter(v => v.id !== id);
+  saveVolunteers(list);
+  renderDashboard();
+    }
 
 function renderDashboard(){
   const list = loadVolunteers();
@@ -432,6 +445,8 @@ function renderDashboard(){
         </div>
         ${members.map(v=>`
           <div class="vcard">
+          
+          <button class="del-btn" onclick="deleteVolunteer(${v.id})">✕</button>
             <div class="vname">${escapeHtml(v.name)}</div>
             <div class="vmeta">${escapeHtml(v.phone)} · ${escapeHtml(v.email)}</div>
             <div class="vmeta">Availability: ${escapeHtml(v.avail)}</div>
