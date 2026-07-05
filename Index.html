@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>NayePankh Foundation — Volunteer Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal-deep:#123A36;
+    --teal-deeper:#0C2926;
+    --cream:#F5EFE1;
+    --cream-dim:#EAE2CE;
+    --marigold:#E8A23D;
+    --marigold-bright:#F4B559;
+    --coral:#D1603D;
+    --ink:#1B2521;
+    --sage:#7FA88F;
+    --sage-dim:rgba(127,168,143,0.35);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    background: var(--teal-deep);
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(232,162,61,0.10), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(127,168,143,0.12), transparent 45%);
+    font-family:'Work Sans', sans-serif;
+    color: var(--cream);
+    min-height:100vh;
+    padding-bottom: 92px;
+  }
+  .wrap{ max-width:520px; margin:0 auto; padding: 0 18px; }
+
+  header.top{
+    padding: 28px 18px 20px;
+    text-align:center;
+    position:relative;
+  }
+  .brand-mark{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:56px; height:56px; border-radius:50%;
+    background: linear-gradient(155deg, var(--marigold-bright), var(--coral));
+    margin-bottom:10px;
+    box-shadow: 0 8px 20px rgba(209,96,61,0.35);
+  }
+  .brand-mark svg{ width:28px; height:28px; }
+  h1.wordmark{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size: 26px;
+    letter-spacing:0.2px;
+    margin: 0 0 4px;
+    color: var(--cream);
+  }
+  .tagline{
+    font-size:13px;
+    color: var(--sage);
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+    margin:0;
+  }
+
+  /* Tabs */
+  .tabs{
+    display:flex; gap:8px;
+    background: rgba(0,0,0,0.18);
+    padding:6px;
+    border-radius:14px;
+    margin: 18px 0 22px;
+  }
+  .tab-btn{
+    flex:1;
+    border:none;
+    background:transparent;
+    color: var(--sage);
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:11px 8px;
+    border-radius:10px;
+    cursor:pointer;
+    transition: all .25s ease;
+  }
+  .tab-btn.active{
+    background: var(--marigold);
+    color: var(--teal-deeper);
+    box-shadow: 0 4px 14px rgba(232,162,61,0.35);
+  }
+
+  .panel{ display:none; animation: fadeUp .35s ease; }
+  .panel.active{ display:block; }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  /* Form card */
+  .card{
+    background: var(--cream);
+    color: var(--ink);
+    border-radius:20px;
+    padding:22px 20px 24px;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.28);
+  }
+  .card h2{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    margin: 0 0 4px;
+  }
+  .card .sub{
+    font-size:13px; color:#5b6b64; margin:0 0 18px;
+  }
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block; font-size:12.5px; font-weight:600;
+    color:#3f4d47; margin-bottom:6px; letter-spacing:0.2px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;
+    padding:12px 13px;
+    border-radius:11px;
+    border:1.5px solid var(--sage-dim);
+    background:#fff;
+    font-family:'Work Sans', sans-serif;
+    font-size:15px;
+    color: var(--ink);
+    outline:none;
+    transition: border-color .2s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    border-color: var(--marigold);
+  }
+  .field textarea{ resize:vertical; min-height:64px; }
+  .row2{ display:flex; gap:10px; }
+  .row2 .field{ flex:1; }
+  .err{ font-size:12px; color:var(--coral); margin-top:5px; display:none; font-weight:600; }
+  .field.invalid input, .field.invalid select{ border-color: var(--coral); }
+  .field.invalid .err{ display:block; }
+
+  .submit-btn{
+    width:100%;
+    margin-top:6px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background: linear-gradient(120deg, var(--marigold-bright), var(--coral));
+    color:#241207;
+    font-family:'Work Sans', sans-serif;
+    font-weight:700;
+    font-size:15.5px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow: 0 10px 22px rgba(209,96,61,0.32);
+    transition: transform .15s ease;
+  }
+  .submit-btn:active{ transform: scale(0.97); }
+
+  /* Toast */
+  #toast{
+    position:fixed; left:50%; bottom:110px; transform:translate(-50%, 20px);
+    background: var(--teal-deeper);
+    color: var(--cream);
+    padding:13px 18px;
+    border-radius:14px;
+    font-size:14px; font-weight:600;
+    display:flex; align-items:center; gap:8px;
+    box-shadow:0 10px 26px rgba(0,0,0,0.4);
+    opacity:0; pointer-events:none;
+    transition: all .4s cubic-bezier(.2,.9,.3,1.3);
+    z-index:50;
+    border:1px solid rgba(232,162,61,0.4);
+  }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+  .feather-fly{
+    position:fixed; font-size:20px; z-index:60; pointer-events:none;
+    transition: all 1s cubic-bezier(.2,.7,.3,1);
+  }
+
+  /* Dashboard */
+  .stats{
+    display:grid; grid-template-columns: repeat(3,1fr); gap:10px;
+    margin-bottom:20px;
+  }
+  .stat{
+    background: rgba(0,0,0,0.18);
+    border:1px solid rgba(232,162,61,0.18);
+    border-radius:14px;
+    padding:14px 8px;
+    text-align:center;
+  }
+  .stat .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:22px; font-weight:600;
+    color: var(--marigold-bright);
+    display:block;
+  }
+  .stat .lbl{
+    font-size:10.5px; color: var(--sage);
+    text-transform:uppercase; letter-spacing:0.5px;
+    margin-top:3px; display:block;
+  }
+
+  .dash-controls{ display:flex; gap:8px; margin-bottom:16px; }
+  .dash-controls input, .dash-controls select{
+    padding:10px 12px; border-radius:10px; border:1px solid rgba(232,162,61,0.3);
+    background: rgba(0,0,0,0.2); color: var(--cream); font-size:13.5px;
+    font-family:'Work Sans', sans-serif;
+  }
+  .dash-controls input{ flex:1.4; }
+  .dash-controls select{ flex:1; }
+  .dash-controls input::placeholder{ color: var(--sage); }
+
+  .region-group{ margin-bottom:22px; }
+  .region-head{
+    display:flex; align-items:center; gap:8px; margin-bottom:10px;
+  }
+  .region-head .dot{
+    width:9px; height:9px; border-radius:50%;
+    background: var(--marigold);
+    box-shadow:0 0 0 4px rgba(232,162,61,0.18);
+  }
+  .region-head h3{
+    font-family:'Fraunces', serif; font-size:16.5px; margin:0;
+    color: var(--cream);
+  }
+  .region-head .count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color: var(--teal-deeper);
+    background: var(--marigold);
+    padding:2px 8px; border-radius:20px; font-weight:600;
+    margin-left:auto;
+  }
+
+  .vcard{
+    background: var(--cream);
+    color: var(--ink);
+    border-radius:14px;
+    padding:13px 14px;
+    margin-bottom:9px;
+    position:relative;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  }
+  .vcard::before{
+    content:'';
+    position:absolute; left:0; top:10%; bottom:10%; width:4px;
+    background: var(--coral); border-radius:4px;
+  }
+  .vcard .vname{ font-weight:700; font-size:15px; margin-bottom:2px; }
+  .vcard .vmeta{ font-size:12.5px; color:#5b6b64; line-height:1.5; }
+  .vcard .vskill{
+    display:inline-block; font-size:11px; font-weight:600;
+    background: var(--sage-dim); color:#2b463a;
+    padding:2px 8px; border-radius:20px; margin-top:6px; margin-right:5px;
+  }
+
+  .empty{
+    text-align:center; padding: 50px 20px; color: var(--sage);
+  }
+  .empty svg{ width:52px; height:52px; opacity:0.6; margin-bottom:12px; }
+  .empty p{ font-size:14px; margin:0; }
+
+  .csv-btn{
+    width:100%; margin-top:6px; padding:12px;
+    background:transparent; border:1.5px solid rgba(232,162,61,0.4);
+    color: var(--marigold-bright); border-radius:11px;
+    font-weight:600; font-size:13.5px; cursor:pointer;
+    font-family:'Work Sans', sans-serif;
+  }
+
+  /* Bottom nav (mobile app feel) */
+  .bottom-nav{
+    position:fixed; bottom:0; left:0; right:0;
+    background: var(--teal-deeper);
+    border-top:1px solid rgba(232,162,61,0.2);
+    display:flex;
+    padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
+    z-index:40;
+  }
+  .nav-btn{
+    flex:1; background:none; border:none; color: var(--sage);
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    font-family:'Work Sans', sans-serif; font-size:11px; font-weight:600;
+    padding:6px 0; cursor:pointer;
+  }
+  .nav-btn.active{ color: var(--marigold-bright); }
+  .nav-btn svg{ width:22px; height:22px; }
+
+  @media (min-width:600px){
+    .bottom-nav{ display:none; }
+    body{ padding-bottom: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C9 6 4 8 4 13c0 4 3.5 7 8 9 4.5-2 8-5 8-9 0-5-5-7-8-11z" fill="#F5EFE1"/></svg>
+    </div>
+    <h1 class="wordmark">NayePankh Foundation</h1>
+    <p class="tagline">Volunteer Registration &amp; Directory</p>
+  </header>
+
+  <div class="tabs" id="tabsDesktop">
+    <button class="tab-btn active" data-panel="register">Register</button>
+    <button class="tab-btn" data-panel="dashboard">Dashboard</button>
+  </div>
+
+  <!-- REGISTER PANEL -->
+  <div class="panel active" id="panel-register">
+    <div class="card">
+      <h2>Join as a Volunteer</h2>
+      <p class="sub">Takes less than a minute. Your details help us match you to the right cause near you.</p>
+      <form id="volForm" novalidate>
+        <div class="field" data-field="name">
+          <label>Full name</label>
+          <input type="text" id="f-name" placeholder="e.g. Ananya Sharma">
+          <div class="err">Please enter your name.</div>
+        </div>
+        <div class="row2">
+          <div class="field" data-field="phone">
+            <label>Phone number</label>
+            <input type="tel" id="f-phone" placeholder="10-digit number">
+            <div class="err">Enter a valid 10-digit number.</div>
+          </div>
+          <div class="field" data-field="email">
+            <label>Email</label>
+            <input type="email" id="f-email" placeholder="you@email.com">
+            <div class="err">Enter a valid email.</div>
+          </div>
+        </div>
+        <div class="field" data-field="region">
+          <label>Region / City</label>
+          <select id="f-region">
+            <option value="">Select region</option>
+            <option>Mumbai</option>
+            <option>Delhi NCR</option>
+            <option>Bengaluru</option>
+            <option>Pune</option>
+            <option>Hyderabad</option>
+            <option>Chennai</option>
+            <option>Kolkata</option>
+            <option>Ahmedabad</option>
+            <option value="__other">Other (type below)</option>
+          </select>
+          <input type="text" id="f-region-other" placeholder="Enter your city/region" style="margin-top:8px; display:none;">
+          <div class="err">Please select or enter a region.</div>
+        </div>
+        <div class="field" data-field="skill">
+          <label>Primary skill / interest</label>
+          <select id="f-skill">
+            <option value="">Select area</option>
+            <option>Teaching &amp; Mentoring</option>
+            <option>Healthcare Support</option>
+            <option>Fundraising</option>
+            <option>Event Management</option>
+            <option>Social Media &amp; Design</option>
+            <option>Tech &amp; Web Development</option>
+            <option>Field Outreach</option>
+          </select>
+          <div class="err">Please select a skill area.</div>
+        </div>
+        <div class="field">
+          <label>Availability</label>
+          <select id="f-avail">
+            <option>Weekends only</option>
+            <option>Weekday evenings</option>
+            <option>Flexible / Anytime</option>
+            <option>One-time events only</option>
+          </select>
+        </div>
+        <button type="submit" class="submit-btn">
+          <span>Register me as a volunteer</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD PANEL -->
+  <div class="panel" id="panel-dashboard">
+    <div class="stats">
+      <div class="stat"><span class="num" id="stat-total">0</span><span class="lbl">Volunteers</span></div>
+      <div class="stat"><span class="num" id="stat-regions">0</span><span class="lbl">Regions</span></div>
+      <div class="stat"><span class="num" id="stat-top">—</span><span class="lbl">Top Region</span></div>
+    </div>
+
+    <div class="dash-controls">
+      <input type="text" id="searchBox" placeholder="Search by name or skill...">
+      <select id="regionFilter"><option value="">All regions</option></select>
+    </div>
+
+    <div id="dashBody"></div>
+
+    <button class="csv-btn" id="exportBtn">⬇ Export as CSV</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" data-panel="register">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zM4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Register
+  </button>
+  <button class="nav-btn" data-panel="dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+    Dashboard
+  </button>
+</div>
+
+<script>
+const STORAGE_KEY = 'naye_pankh_volunteers';
+
+function loadVolunteers(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e){ return []; }
+}
+function saveVolunteers(list){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+// ---- Tab switching ----
+const panels = { register: document.getElementById('panel-register'), dashboard: document.getElementById('panel-dashboard') };
+function switchPanel(name){
+  Object.keys(panels).forEach(k => panels[k].classList.toggle('active', k===name));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.panel===name));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.panel===name));
+  if(name === 'dashboard') renderDashboard();
+}
+document.querySelectorAll('.tab-btn, .nav-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> switchPanel(btn.dataset.panel));
+});
+
+// ---- Region "other" toggle ----
+const regionSelect = document.getElementById('f-region');
+const regionOther = document.getElementById('f-region-other');
+regionSelect.addEventListener('change', ()=>{
+  regionOther.style.display = regionSelect.value === '__other' ? 'block' : 'none';
+});
+
+// ---- Form validation & submit ----
+const form = document.getElementById('volForm');
+function setError(fieldName, invalid){
+  const el = document.querySelector(`[data-field="${fieldName}"]`);
+  if(el) el.classList.toggle('invalid', invalid);
+}
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  let region = regionSelect.value;
+  if(region === '__other') region = regionOther.value.trim();
+  const skill = document.getElementById('f-skill').value;
+  const avail = document.getElementById('f-avail').value;
+
+  let valid = true;
+  if(!name){ setError('name', true); valid = false; } else setError('name', false);
+  if(!/^\d{10}$/.test(phone.replace(/\D/g,''))){ setError('phone', true); valid = false; } else setError('phone', false);
+  if(!/^\S+@\S+\.\S+$/.test(email)){ setError('email', true); valid = false; } else setError('email', false);
+  if(!region){ setError('region', true); valid = false; } else setError('region', false);
+  if(!skill){ setError('skill', true); valid = false; } else setError('skill', false);
+
+  if(!valid) return;
+
+  const list = loadVolunteers();
+  list.push({
+    id: Date.now(),
+    name, phone, email, region, skill, avail,
+    date: new Date().toISOString()
+  });
+  saveVolunteers(list);
+
+  flyFeather();
+  showToast(`Welcome, ${name.split(' ')[0]}! Added to ${region}.`);
+  form.reset();
+  regionOther.style.display = 'none';
+
+  setTimeout(()=> switchPanel('dashboard'), 900);
+});
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.innerHTML = `🪶 ${msg}`;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 2600);
+}
+
+function flyFeather(){
+  const f = document.createElement('div');
+  f.className = 'feather-fly';
+  f.textContent = '🪶';
+  const btn = form.querySelector('.submit-btn').getBoundingClientRect();
+  f.style.left = btn.left + btn.width/2 + 'px';
+  f.style.top = btn.top + 'px';
+  document.body.appendChild(f);
+  requestAnimationFrame(()=>{
+    f.style.left = '50%';
+    f.style.top = '40px';
+    f.style.transform = 'scale(0.3) rotate(200deg)';
+    f.style.opacity = '0.2';
+  });
+  setTimeout(()=> f.remove(), 1050);
+}
+
+// ---- Dashboard rendering ----
+function renderDashboard(){
+  const list = loadVolunteers();
+  const search = document.getElementById('searchBox').value.toLowerCase();
+  const filterRegion = document.getElementById('regionFilter').value;
+
+  document.getElementById('stat-total').textContent = list.length;
+  const regions = [...new Set(list.map(v=>v.region))];
+  document.getElementById('stat-regions').textContent = regions.length;
+
+  // top region
+  const counts = {};
+  list.forEach(v => counts[v.region] = (counts[v.region]||0)+1);
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('stat-top').textContent = top ? top[0] : '—';
+
+  // populate region filter (preserve selection)
+  const filterSel = document.getElementById('regionFilter');
+  const prevVal = filterSel.value;
+  filterSel.innerHTML = '<option value="">All regions</option>' +
+    regions.sort().map(r => `<option value="${r}">${r}</option>`).join('');
+  filterSel.value = prevVal;
+
+  const filtered = list.filter(v=>{
+    const matchesSearch = !search || v.name.toLowerCase().includes(search) || v.skill.toLowerCase().includes(search);
+    const matchesRegion = !filterRegion || v.region === filterRegion;
+    return matchesSearch && matchesRegion;
+  });
+
+  const body = document.getElementById('dashBody');
+
+  if(filtered.length === 0){
+    body.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C9 6 4 8 4 13c0 4 3.5 7 8 9 4.5-2 8-5 8-9 0-5-5-7-8-11z"/></svg>
+      <p>${list.length === 0 ? 'No volunteers yet. Register the first one!' : 'No matches for this search or filter.'}</p>
+    </div>`;
+    return;
+  }
+
+  // group by region
+  const grouped = {};
+  filtered.forEach(v=>{
+    if(!grouped[v.region]) grouped[v.region] = [];
+    grouped[v.region].push(v);
+  });
+
+  body.innerHTML = Object.keys(grouped).sort().map(region=>{
+    const members = grouped[region].sort((a,b)=> b.id - a.id);
+    return `
+      <div class="region-group">
+        <div class="region-head">
+          <span class="dot"></span>
+          <h3>${region}</h3>
+          <span class="count">${members.length}</span>
+        </div>
+        ${members.map(v=>`
+          <div class="vcard">
+            <div class="vname">${escapeHtml(v.name)}</div>
+            <div class="vmeta">${escapeHtml(v.phone)} · ${escapeHtml(v.email)}</div>
+            <div class="vmeta">Availability: ${escapeHtml(v.avail)}</div>
+            <span class="vskill">${escapeHtml(v.skill)}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+document.getElementById('searchBox').addEventListener('inp
